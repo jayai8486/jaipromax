@@ -15,4 +15,31 @@
 <section class="card"><div class="pill">DEVICE HUB</div><h3>Mobile + Laptop</h3><p>This dashboard adapts to phone and desktop screens. Secure laptop control needs a paired desktop agent; Android permissions must be granted by you.</p><button class="btn secondary" onclick="alert('Device pairing is a future integration; no device access is active.')">Pair device</button><div class="status">No devices paired</div></section>
 <section class="card wide"><h3>Safety controls</h3><p>Trading starts disabled. Set maximum daily loss, per-trade risk, leverage cap and allowed markets before enabling live orders. YouTube publishing should use official OAuth and a review step.</p><div class="status">Live trading: OFF &nbsp;|&nbsp; Auto-publishing: OFF</div></section>
 </div></main><footer>Prototype only. This page does not connect to Delta Exchange, YouTube, your phone, or your laptop. A secure backend, provider credentials, OAuth permissions, deployment and testing are required before those functions work.</footer>
-<script>function send(){const v=document.getElementById('cmd').value.trim();document.getElementById('reply').textContent=v?'Command received in prototype: “'+v+'”. Live AI execution is not connected yet.':'Enter a command first.'}</script></body></html>
+<script>async function send() {
+  const input = document.getElementById("cmd");
+  const output = document.getElementById("reply");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  output.textContent = "JAI is thinking...";
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+
+    output.textContent = response.ok
+      ? data.reply
+      : (data.error || "Something went wrong.");
+
+  } catch (error) {
+    output.textContent = "Connection error. Please try again.";
+  }
+}(){const v=document.getElementById('cmd').value.trim();document.getElementById('reply').textContent=v?'Command received in prototype: “'+v+'”. Live AI execution is not connected yet.':'Enter a command first.'}</script></body></html>
